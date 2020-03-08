@@ -5,18 +5,18 @@ module.exports = (ip, csv, emmitter) => {
         fs = require('fs'),
         geoip = require('./geoip'),
         ipInt = geoip.ip2int(ip),
-        readInterface = readline.createInterface({
+        reader = readline.createInterface({
             input: fs.createReadStream(csv),
             console: false
         })
 
-    readInterface.on('line', line => {
+    reader.on('line', line => {
         line = line.replace(/"/g, '')
         const
             [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
             [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
         if (ipInt >= ipStart && ipInt <= ipEnd) {
-            readInterface.close()
+            reader.close()
             emmitter.emit('receive', JSON.stringify({ip, countryCode, country, state, city}))
         }
     })
