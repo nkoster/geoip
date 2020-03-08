@@ -12,9 +12,9 @@ module.exports = (ip, csv, emmitter) => {
 
     readInterface.on('line', line => {
         line = line.replace(/"/g, '')
-        const [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(',')
-        const ipStart = parseInt(ipStartStr)
-        const ipEnd = parseInt(ipEndStr)
+        const
+            [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
+            [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
         if (ipInt >= ipStart && ipInt <= ipEnd) {
             readInterface.close()
             emmitter.emit('receive', JSON.stringify({ip, countryCode, country, state, city}))
