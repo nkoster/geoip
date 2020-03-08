@@ -1,4 +1,4 @@
-Get location of an IP address.
+Get the location of an IP address.
 
 ```
 git clone https://github.com/nkoster/geoip
