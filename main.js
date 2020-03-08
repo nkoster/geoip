@@ -1,9 +1,18 @@
 const
     events = require('events'),
     emmitter = new events.EventEmitter(),
-    geoLoc = require('./util/geolocation'),
-    ip = process.argv[2] || '194.109.6.66'
+    app = require('express')(),
+    http = require('http').createServer(app),
+    geoLoc = require('./util/geolocation')
 
-emmitter.on('receive', data => console.log(data))
+app.get('/geoip/:ip', (req, res) => {
+    geoLoc(req.params.ip, './IP2LOCATION-LITE-DB11.CSV', emmitter)
+    emmitter.on('receive', data => {
+        res.setHeader('Content-Type', 'application/json')
+        res.end(data)
+    })
+})
 
-geoLoc(ip, './IP2LOCATION-LITE-DB11.CSV', emmitter)
+http.listen(9999, _ => {
+    console.log('http listening on :9999')
+})
