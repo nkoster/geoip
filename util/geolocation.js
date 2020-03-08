@@ -17,13 +17,7 @@ module.exports = (ip, csv, emmitter) => {
         const ipEnd = parseInt(ipEndStr)
         if (ipInt >= ipStart && ipInt <= ipEnd) {
             readInterface.close()
-            emmitter.emit('receive', JSON.stringify({
-                ip,
-                countryCode,
-                country,
-                state,
-                city
-            }))
+            emmitter.emit('receive', JSON.stringify({ip, countryCode, country, state, city}))
         }
     })
 
