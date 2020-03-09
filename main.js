@@ -1,18 +1,36 @@
 const
-    events = require('events'),
     app = require('express')(),
     http = require('http').createServer(app),
-    geoLoc = require('./util/geolocation')
+    geoip = require('./util/geoip'),
+    readline = require('readline'),
+    fs = require('fs'),
+    csv = './IP2LOCATION-LITE-DB11.CSV',
+    reader = readline.createInterface({
+        input: fs.createReadStream(csv),
+        console: false
+    })
+
+let dbArray = []
+
+reader.on('line', line => {
+    line = line.replace(/"/g, '')
+    const
+        [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
+        [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
+    dbArray.push({ipStart, ipEnd, countryCode, country, state, city})
+})
+
+reader.on('close', _ => {
+    console.log('db loaded')
+})
 
 app.get('/geoip/:ip', (req, res) => {
-    const emmitter = new events.EventEmitter()
-    geoLoc(req.params.ip, './IP2LOCATION-LITE-DB11.CSV', emmitter)
-    emmitter.on('receive', data => {
-        console.log(req.params.ip, data)
+    const
+        ipInt = geoip.ip2int(req.params.ip),
+        ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd),
+        hit = dbArray.find(ipIntFilter)
         res.setHeader('Content-Type', 'application/json')
-        res.end(data)
-        emmitter.removeAllListeners
-    })
+        res.end(JSON.stringify(hit))
 })
 
 http.listen(10000, _ => {
