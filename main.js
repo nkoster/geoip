@@ -29,8 +29,18 @@ app.get('/geoip/:ip', (req, res) => {
         ipInt = geoip.ip2int(req.params.ip),
         ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd),
         hit = dbArray.find(ipIntFilter)
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(hit))
+    res.setHeader('Content-Type', 'application/json')
+    if (hit) {
+        res.end(JSON.stringify({
+            ip: req.params.ip,
+            countryCode: hit.countryCode,
+            country: hit.country,
+            state: hit.state,
+            city: hit.city
+        }))    
+    } else {
+        res.end('----')
+    }
 })
 
 http.listen(10000, _ => {
