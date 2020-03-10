@@ -8,30 +8,53 @@ const
     reader = readline.createInterface({
         input: fs.createReadStream(csv),
         console: false
-    })
+    }),
+    split = 695432
 
-let dbArray = []
+let
+    dbArrayA = [], dbArrayB = [], dbArrayC = [], dbArrayD = [],
+    lineCounter = 0,
+    dbLoaded = false
 
 reader.on('line', line => {
+    lineCounter++
     line = line.replace(/"/g, '')
     const
-        [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
+        [ipStartStr, ipEndStr, countryCode] = line.split(','),
         [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
-    // dbArray.push({ipStart, ipEnd, countryCode, country, state, city})
-    dbArray.push({ipStart, ipEnd, countryCode})
+    if (lineCounter < split) {
+        dbArrayA.push({ipStart, ipEnd, countryCode})
+    } else if (lineCounter < split * 2) {
+        dbArrayB.push({ipStart, ipEnd, countryCode})
+    } else if (lineCounter < split * 3) {
+        dbArrayC.push({ipStart, ipEnd, countryCode})
+    } else if (lineCounter < split * 4) {
+        dbArrayD.push({ipStart, ipEnd, countryCode})
+    }
 })
 
 reader.on('close', _ => {
     console.log('db loaded')
+    dbLoaded = true
 })
 
 app.get('/:ip', (req, res) => {
-    const
-        ipInt = geoip.ip2int(req.params.ip),
-        ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd),
-        hit = dbArray.find(ipIntFilter)
-    res.setHeader('Content-Type', 'application/json')
-    if (hit) {
+    if (dbLoaded) {
+        const
+            ipInt = geoip.ip2int(req.params.ip),
+            ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd)
+        let hit
+        if (ipInt <= dbArrayA[dbArrayA.length - 1].ipEnd) {
+            hit = dbArrayA.find(ipIntFilter)
+        } else if (ipInt <= dbArrayB[dbArrayB.length - 1].ipEnd) {
+            hit = dbArrayB.find(ipIntFilter)
+        } else if (ipInt <= dbArrayC[dbArrayC.length - 1].ipEnd) {
+            hit = dbArrayC.find(ipIntFilter)
+        } else if (ipInt <= dbArrayD[dbArrayD.length - 1].ipEnd) {
+            hit = dbArrayD.find(ipIntFilter)
+        }
+        res.setHeader('Content-Type', 'application/json')
+        console.log(req.params.ip, hit)
         res.end(JSON.stringify({
             ip: req.params.ip,
             countryCode: hit.countryCode
