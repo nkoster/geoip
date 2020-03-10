@@ -17,14 +17,15 @@ reader.on('line', line => {
     const
         [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
         [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
-    dbArray.push({ipStart, ipEnd, countryCode, country, state, city})
+    // dbArray.push({ipStart, ipEnd, countryCode, country, state, city})
+    dbArray.push({ipStart, ipEnd, countryCode})
 })
 
 reader.on('close', _ => {
     console.log('db loaded')
 })
 
-app.get('/geoip/:ip', (req, res) => {
+app.get('/:ip', (req, res) => {
     const
         ipInt = geoip.ip2int(req.params.ip),
         ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd),
@@ -33,10 +34,7 @@ app.get('/geoip/:ip', (req, res) => {
     if (hit) {
         res.end(JSON.stringify({
             ip: req.params.ip,
-            countryCode: hit.countryCode,
-            country: hit.country,
-            state: hit.state,
-            city: hit.city
+            countryCode: hit.countryCode
         }))    
     } else {
         res.end('----')
