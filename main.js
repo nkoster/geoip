@@ -6,16 +6,25 @@ const
     readline = require('readline'),
     fs = require('fs'),
     csv = './IP2LOCATION-LITE-DB11.CSV',
+    csvTotalLines = 2781731,
     reader = readline.createInterface({
         input: fs.createReadStream(csv),
         console: false
     }),
-    split = 695432
+    splits = 100,
+    split = Math.floor(csvTotalLines / splits),
+    totalArrays = Math.floor(csvTotalLines / split)
+
+console.log(split)
 
 let
-    dbArrayA = [], dbArrayB = [], dbArrayC = [], dbArrayD = [],
+    dbArray = [],
     lineCounter = 0,
     dbLoaded = false
+
+for (let i = 0; i < totalArrays; i++) {
+    dbArray[i] = []
+}
 
 reader.on('line', line => {
     lineCounter++
@@ -23,14 +32,10 @@ reader.on('line', line => {
     const
         [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
         [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
-    if (lineCounter < split) {
-        dbArrayA.push({ipStart, ipEnd, countryCode, country, state, city})
-    } else if (lineCounter < split * 2) {
-        dbArrayB.push({ipStart, ipEnd, countryCode, country, state, city})
-    } else if (lineCounter < split * 3) {
-        dbArrayC.push({ipStart, ipEnd, countryCode, country, state, city})
-    } else if (lineCounter < split * 4) {
-        dbArrayD.push({ipStart, ipEnd, countryCode, country, state, city})
+    let arrayCounter = Math.floor(lineCounter / split)
+    if (lineCounter < split * (arrayCounter + 1)) {
+        if (typeof dbArray[arrayCounter] != 'undefined')
+            dbArray[arrayCounter].push({ipStart, ipEnd, countryCode, country, state, city})
     }
 })
 
@@ -45,15 +50,11 @@ app.get('/:ip', (req, res) => {
             ipInt = geoip.ip2int(req.params.ip),
             ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd)
         let hit
-        if (ipInt <= dbArrayA[dbArrayA.length - 1].ipEnd) {
-            hit = dbArrayA.find(ipIntFilter)
-        } else if (ipInt <= dbArrayB[dbArrayB.length - 1].ipEnd) {
-            hit = dbArrayB.find(ipIntFilter)
-        } else if (ipInt <= dbArrayC[dbArrayC.length - 1].ipEnd) {
-            hit = dbArrayC.find(ipIntFilter)
-        } else if (ipInt <= dbArrayD[dbArrayD.length - 1].ipEnd) {
-            hit = dbArrayD.find(ipIntFilter)
-        }
+        dbArray.forEach(arr => {
+            if (ipInt >= arr[0].ipStart && ipInt <= arr[arr.length - 1].ipEnd) {
+                hit = arr.find(ipIntFilter)
+            }
+        })
         res.setHeader('Content-Type', 'application/json')
         if (typeof hit === 'object') {
             log && console.log(new Date(), req.params.ip, hit.countryCode)
@@ -73,7 +74,6 @@ app.get('/:ip', (req, res) => {
                 city: '-'
             }))
         }
-
     } else {
         res.end('Please try again later.')
     }
