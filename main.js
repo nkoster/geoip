@@ -15,8 +15,6 @@ const
     split = Math.floor(csvTotalLines / splits),
     totalArrays = Math.floor(csvTotalLines / split)
 
-console.log(split)
-
 let
     dbArray = [],
     lineCounter = 0,
@@ -40,7 +38,7 @@ reader.on('line', line => {
 })
 
 reader.on('close', _ => {
-    console.log('db loaded')
+    console.log('db loaded in', dbArray.length, 'arrays')
     dbLoaded = true
 })
 
@@ -50,9 +48,10 @@ app.get('/:ip', (req, res) => {
             ipInt = geoip.ip2int(req.params.ip),
             ipIntFilter = el => ipInt >= parseInt(el.ipStart) && ipInt <= parseInt(el.ipEnd)
         let hit
-        dbArray.forEach(arr => {
+        dbArray.some(arr => {
             if (ipInt >= arr[0].ipStart && ipInt <= arr[arr.length - 1].ipEnd) {
                 hit = arr.find(ipIntFilter)
+                return true
             }
         })
         res.setHeader('Content-Type', 'application/json')
