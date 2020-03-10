@@ -20,16 +20,16 @@ reader.on('line', line => {
     lineCounter++
     line = line.replace(/"/g, '')
     const
-        [ipStartStr, ipEndStr, countryCode] = line.split(','),
+        [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
         [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
     if (lineCounter < split) {
-        dbArrayA.push({ipStart, ipEnd, countryCode})
+        dbArrayA.push({ipStart, ipEnd, countryCode, country, state, city})
     } else if (lineCounter < split * 2) {
-        dbArrayB.push({ipStart, ipEnd, countryCode})
+        dbArrayB.push({ipStart, ipEnd, countryCode, country, state, city})
     } else if (lineCounter < split * 3) {
-        dbArrayC.push({ipStart, ipEnd, countryCode})
+        dbArrayC.push({ipStart, ipEnd, countryCode, country, state, city})
     } else if (lineCounter < split * 4) {
-        dbArrayD.push({ipStart, ipEnd, countryCode})
+        dbArrayD.push({ipStart, ipEnd, countryCode, country, state, city})
     }
 })
 
@@ -54,13 +54,27 @@ app.get('/:ip', (req, res) => {
             hit = dbArrayD.find(ipIntFilter)
         }
         res.setHeader('Content-Type', 'application/json')
-        console.log(req.params.ip, hit)
-        res.end(JSON.stringify({
-            ip: req.params.ip,
-            countryCode: hit.countryCode
-        }))    
+        if (typeof hit === 'object') {
+            console.log(req.params.ip, hit)
+            res.end(JSON.stringify({
+                ip: req.params.ip,
+                countryCode: hit.countryCode,
+                country: hit.country,
+                state: hit.state,
+                city: hit.city
+            }))
+        } else {
+            res.end(JSON.stringify({
+                ip: req.params.ip,
+                countryCode: '-',
+                country: '-',
+                state: '-',
+                city: '-'
+            }))
+        }
+
     } else {
-        res.end('----')
+        res.end('Please try again later.')
     }
 })
 
