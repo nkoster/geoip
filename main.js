@@ -1,4 +1,5 @@
 const
+    log = false,
     app = require('express')(),
     http = require('http').createServer(app),
     geoip = require('./util/geoip'),
@@ -55,7 +56,7 @@ app.get('/:ip', (req, res) => {
         }
         res.setHeader('Content-Type', 'application/json')
         if (typeof hit === 'object') {
-            console.log(req.params.ip, hit)
+            log && console.log(new Date(), req.params.ip, hit.countryCode)
             res.end(JSON.stringify({
                 ip: req.params.ip,
                 countryCode: hit.countryCode,
