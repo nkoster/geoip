@@ -80,5 +80,5 @@ app.get('/:ip', (req, res) => {
 })
 
 http.listen(10000, _ => {
-    console.log('http listening on :10000')
+    console.log('geoip listening on :10000')
 })
