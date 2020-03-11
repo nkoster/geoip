@@ -1,6 +1,5 @@
 Fast "IP address to location" service in NodeJS.
-Responses are in JSON.
-
+Responses in JSON.
 The IP location database in CSV format was fetched from [http://lite.ip2location.com](ip2location).
 
 Install:
