@@ -18,7 +18,7 @@ For example, with ```curl```:
 ```
 curl -s localhost:10000/223.109.6.66
 ```
-Which should give a response like this:
+Which gives a response like this:
 ```
 {"ip":"223.109.6.66","countryCode":"CN","country":"China","state":"Beijing","city":"Beijing"}
 ```
