@@ -16,9 +16,9 @@ Usage:
 
 for example, with `curl`
 ```
-curl -s localhost:10000/223.109.6.66
+curl -s localhost:10000/223.75.6.66
 ```
 response
 ```json
-{"ip":"223.109.6.66","countryCode":"CN","country":"China","state":"Beijing","city":"Beijing"}
+{"ip":"223.75.6.66","countryCode":"CN","country":"China","state":"Hubei","city":"Wuhan"}
 ```
