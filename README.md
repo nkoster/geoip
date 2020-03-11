@@ -1,4 +1,4 @@
-Fast "IPV4 address to location" service in NodeJS.
+"IPV4 address to location" service in NodeJS.
 Responses in JSON.
 The IP location database in CSV format was fetched from [ip2location](http://lite.ip2location.com).
 
@@ -14,11 +14,11 @@ node main.js IP2LOCATION-LITE-DB11.CSV
 
 Usage:
 
-for example, with `curl`:
+for example, with `curl`
 ```
 curl -s localhost:10000/223.109.6.66
 ```
-response:
+response
 ```json
 {"ip":"223.109.6.66","countryCode":"CN","country":"China","state":"Beijing","city":"Beijing"}
 ```
