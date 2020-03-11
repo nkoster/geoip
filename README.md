@@ -4,7 +4,7 @@ The IP location database in CSV format was fetched from [ip2location](http://lit
 
 Install:
 
-```bash
+```
 git clone https://github.com/nkoster/geoip
 cd geoip
 npm i
@@ -19,6 +19,6 @@ For example, with `curl`:
 curl -s localhost:10000/223.109.6.66
 ```
 Which gives a response like this:
-```
+```json
 {"ip":"223.109.6.66","countryCode":"CN","country":"China","state":"Beijing","city":"Beijing"}
 ```
