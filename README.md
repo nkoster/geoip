@@ -15,11 +15,11 @@ node main.js IP2LOCATION-LITE-DB11.CSV
 
 Usage:
 
-for example, with ```curl```:
+For example, with ```curl```:
 ```
 curl -s localhost:10000/223.109.6.66
 ```
-which should give a response like this:
+Which should give a response like this:
 ```
 {"ip":"223.109.6.66","countryCode":"CN","country":"China","state":"Beijing","city":"Beijing"}
 ```
