@@ -4,7 +4,7 @@ The IP location database in CSV format was fetched from [ip2location](http://lit
 
 Install:
 
-```
+```bash
 git clone https://github.com/nkoster/geoip
 cd geoip
 npm i
@@ -14,7 +14,7 @@ node main.js IP2LOCATION-LITE-DB11.CSV
 
 Usage:
 
-For example, with ```curl```:
+For example, with `curl`:
 ```
 curl -s localhost:10000/223.109.6.66
 ```
