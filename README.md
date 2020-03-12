@@ -22,3 +22,5 @@ response
 ```json
 {"ip":"223.75.6.66","countryCode":"CN","country":"China","state":"Hubei","city":"Wuhan"}
 ```
+
+Online test version is here: ```curl -s https://geoip.w3b.net/223.75.6.66```
