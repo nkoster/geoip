@@ -8,7 +8,7 @@ Install:
 git clone https://github.com/nkoster/geoip
 cd geoip
 npm i
-gunzip IP2LOCATION-LITE-DB11.CSV.gz
+curl -sLO https://w3b.net/IP2LOCATION-LITE-DB11.CSV
 node main.js IP2LOCATION-LITE-DB11.CSV
 ```
 
