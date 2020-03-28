@@ -9,13 +9,13 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
         csvTotalLines = parseInt(stdout)
         const spinners = String.raw`⣾⣽⣻⢿⡿⣟⣯⣷`.split('')
         let index = 0
-        let spinner = setInterval(_ => {
+        const spinner = setInterval(_ => {
             let spin = spinners[index]
             if (typeof spin === 'undefined') {
                 index = 0
                 spin = spinners[index]
             }
-            std.write(`loading ${csvTotalLines} lines ${spin}`)
+            std.write(`loading \u001b[33m${csvTotalLines}\u001b[39m lines ${spin}`)
             rdl.cursorTo(std, 0)
             index = index >= spinners.length ? 0 : index + 1
         }, 100)
@@ -60,7 +60,10 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
         })
         
         reader.on('close', _ => {
-            console.log(`${csvTotalLines} lines loaded in ${dbArray.length} arrays`)
+            console.log(
+                `\u001b[33m${csvTotalLines}\u001b[39m lines loaded`,
+                `in \u001b[33m${dbArray.length}\u001b[39m arrays`
+            )
             dbLoaded = true
             clearInterval(spinner)
         })
