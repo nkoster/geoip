@@ -1,10 +1,24 @@
-const { exec } = require("child_process")
+const
+    { exec } = require("child_process"),
+    process = require('process'),
+    rdl = require('readline'),
+    std = process.stdout
 
 exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
     if (parseInt(stdout) > 1) {
-
         csvTotalLines = parseInt(stdout)
-        console.log('loading', csvTotalLines, 'lines')
+        const spinners = String.raw`-\|/`.split('')
+        let index = 0
+        let spinner = setInterval(_ => {
+            let spin = spinners[index]
+            if (typeof spin === 'undefined') {
+                index = 0
+                spin = spinners[index]
+            }
+            std.write(`loading ${csvTotalLines} lines ${spin}`)
+            rdl.cursorTo(std, 0)
+            index = index >= spinners.length ? 0 : index + 1
+        }, 100)
 
         const
             log = false,
@@ -46,8 +60,9 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
         })
         
         reader.on('close', _ => {
-            console.log('db loaded in', dbArray.length, 'arrays')
+            console.log(`${csvTotalLines} lines loaded in ${dbArray.length} arrays`)
             dbLoaded = true
+            clearInterval(spinner)
         })
         
         app.get('/:ip', (req, res) => {
