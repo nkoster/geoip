@@ -7,7 +7,7 @@ const
 exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
     if (parseInt(stdout) > 1) {
         csvTotalLines = parseInt(stdout)
-        const spinners = String.raw`-\|/`.split('')
+        const spinners = String.raw`⣾⣽⣻⢿⡿⣟⣯⣷`.split('')
         let index = 0
         let spinner = setInterval(_ => {
             let spin = spinners[index]
