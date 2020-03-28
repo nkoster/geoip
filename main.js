@@ -51,8 +51,8 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
             line = line.replace(/"/g, '')
             const
                 [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
-                [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)]
-            let arrayCounter = Math.floor(lineCounter / split)
+                [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)],
+                arrayCounter = Math.floor(lineCounter / split)
             if (lineCounter < split * (arrayCounter + 1)) {
                 if (typeof dbArray[arrayCounter] != 'undefined')
                     dbArray[arrayCounter].push({ipStart, ipEnd, countryCode, country, state, city})
