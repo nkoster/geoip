@@ -69,6 +69,11 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
         })
         
         app.get('/:ip', (req, res) => {
+            console.log(
+                new Date().toISOString(),
+                req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+                req.params.ip
+            )
             if (dbLoaded) {
                 const
                     ipInt = geoip.ip2int(req.params.ip),
@@ -105,7 +110,7 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
         })
         
         http.listen(httpPort, _ => {
-            console.log('geoip listening on port', httpPort)
+            console.log(`geoip listening on port \u001b[33m${httpPort}\u001b[39m`)
         })
     
     }
