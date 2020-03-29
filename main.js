@@ -1,23 +1,27 @@
 const
     { exec } = require("child_process"),
-    process = require('process'),
-    rdl = require('readline'),
-    std = process.stdout
+    process = require('process')
 
 exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
     if (parseInt(stdout) > 1) {
-        csvTotalLines = parseInt(stdout)
-        const spinners = String.raw`⣾⣽⣻⢿⡿⣟⣯⣷`.split('').reverse()
+        const
+            rdl = require('readline'),
+            std = process.stdout,
+            spinners = [],
+            currentSpinner = 0,
+            csvTotalLines = parseInt(stdout)
+        spinners.push(String.raw`⣾⣽⣻⢿⡿⣟⣯⣷`.split('').reverse())
+        spinners.push(String.raw`-\|/`.split(''))
         let index = 0
         const spinner = setInterval(_ => {
-            let spin = spinners[index]
+            let spin = spinners[currentSpinner][index]
             if (typeof spin === 'undefined') {
                 index = 0
-                spin = spinners[index]
+                spin = spinners[currentSpinner][index]
             }
             std.write(`loading \u001b[33m${csvTotalLines}\u001b[39m lines ${spin}`)
             rdl.cursorTo(std, 0)
-            index = index >= spinners.length ? 0 : index + 1
+            index = index >= spinners[currentSpinner].length ? 0 : index + 1
         }, 100)
 
         const
