@@ -20,7 +20,15 @@ curl -s localhost:10000/223.75.6.66
 ```
 response
 ```json
-{"ip":"223.75.6.66","countryCode":"CN","country":"China","state":"Hubei","city":"Wuhan","latitude":"30.583330","longitude":"114.266670"}
+{
+  "ip": "223.75.6.66",
+  "countryCode": "CN",
+  "country": "China",
+  "state": "Hubei",
+  "city": "Wuhan",
+  "latitude": "30.583330",
+  "longitude": "114.266670"
+}
 ```
 
 Online test version is here: ```curl -s https://geoip.w3b.net/223.75.6.66```
