@@ -54,12 +54,12 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
             lineCounter++
             line = line.replace(/"/g, '')
             const
-                [ipStartStr, ipEndStr, countryCode, country, state, city] = line.split(','),
+                [ipStartStr, ipEndStr, countryCode, country, state, city, lat, lng] = line.split(','),
                 [ipStart, ipEnd] = [parseInt(ipStartStr), parseInt(ipEndStr)],
                 arrayCounter = Math.floor(lineCounter / split)
             if (lineCounter < split * (arrayCounter + 1)) {
                 if (typeof dbArray[arrayCounter] != 'undefined')
-                    dbArray[arrayCounter].push({ipStart, ipEnd, countryCode, country, state, city})
+                    dbArray[arrayCounter].push({ipStart, ipEnd, countryCode, country, state, city, lat, lng})
             }
         })
         
@@ -97,7 +97,9 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
                         countryCode: hit.countryCode,
                         country: hit.country,
                         state: hit.state,
-                        city: hit.city
+                        city: hit.city,
+                        latitude: hit.lat,
+                        longitude: hit.lng
                     }))
                 } else {
                     res.end(JSON.stringify({
@@ -105,7 +107,9 @@ exec(`cat ${process.argv[2]} | wc -l`, (_, stdout) => {
                         countryCode: '-',
                         country: '-',
                         state: '-',
-                        city: '-'
+                        city: '-',
+                        latitude: '-',
+                        longitude: '-'
                     }))
                 }
             } else {
